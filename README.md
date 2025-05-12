@@ -16,39 +16,116 @@ Here are the fonts included in this repository, along with links to their offici
 9. [Ubuntu Font](https://design.ubuntu.com/font/) - A clean and modern font family.
 10. [UnderCaseType Fraunces](https://fonts.google.com/specimen/Fraunces) - A variable font with a touch of character.
 
-## Setup Instructions for macOS
+---
 
-### Prerequisites
-Ensure you have a terminal application installed on macOS (e.g., the default Terminal app).
+# Font Installation and Cache Refresh Runbook
 
-### Steps to Install the Fonts
+This guide explains how to copy font files (`.ttf`, `.otf`) to the appropriate directories and refresh the font cache on **Linux** and **macOS** systems.
 
-1. Clone this repository to your local machine:
-   ```bash
-   git clone https://github.com/philipbhaworth/fonts.git
-   cd fonts
-   ```
+## **Linux (Ubuntu/Debian)**
 
-2. Run the installation script to copy all font files to your macOS user fonts directory:
-   ```bash
-   ./mac-install-fonts.sh
-   ```
+### 1. **Copy Fonts to the Local User Directory**
 
-### What the Script Does
-The script performs the following actions:
-- Recursively searches the repository for `.ttf` and `.otf` font files.
-- Copies all found font files into the `~/Library/Fonts/` directory, making them available to the current user.
+* Create the font directory (if it doesn't exist):
 
-After running the script, your fonts will be ready to use in all applications on your macOS system.
+  ```bash
+  mkdir -p ~/.local/share/fonts
+  ```
 
-### Optional: System-Wide Installation
-If you prefer to install the fonts for all users on your machine, you can modify the script to copy the fonts to `/Library/Fonts/` instead of `~/Library/Fonts/`. This requires `sudo` privileges:
+* Copy `.ttf` and `.otf` font files to the local font directory:
+
+  ```bash
+  cp *.ttf *.otf ~/.local/share/fonts/
+  ```
+
+### 2. **Copy Fonts to the System-wide Directory (Optional)**
+
+If you want the fonts to be available system-wide for all users:
+
+* Create directories for TrueType and OpenType fonts:
+
+  ```bash
+  sudo mkdir -p /usr/share/fonts/truetype/my_fonts
+  sudo mkdir -p /usr/share/fonts/opentype/my_fonts
+  ```
+
+* Copy `.ttf` files to the TrueType directory and `.otf` files to the OpenType directory:
+
+  ```bash
+  sudo cp *.ttf /usr/share/fonts/truetype/my_fonts/
+  sudo cp *.otf /usr/share/fonts/opentype/my_fonts/
+  ```
+
+### 3. **Refresh the Font Cache**
+
+To make the newly copied fonts available, refresh the font cache:
+
 ```bash
-sudo ./mac-install-fonts.sh
+fc-cache -fv
 ```
 
-## Customization
-Feel free to add or remove fonts from the repository to suit your personal preferences. Simply place new font files in the appropriate directory before running the installation script.
+* `-f`: Force the rebuild of the font cache.
+* `-v`: Provide verbose output.
+
+---
+
+## **macOS**
+
+### 1. **Copy Fonts to the User Font Directory**
+
+* macOS automatically detects fonts placed in the **user-specific font directory**:
+
+  ```bash
+  mkdir -p ~/Library/Fonts
+  ```
+
+* Copy the `.ttf` and `.otf` font files into this directory:
+
+  ```bash
+  cp *.ttf *.otf ~/Library/Fonts/
+  ```
+
+### 2. **Copy Fonts to the System-wide Font Directory (Optional)**
+
+If you want the fonts to be available system-wide for all users:
+
+* Copy fonts to the system-wide font directory:
+
+  ```bash
+  sudo cp *.ttf *.otf /Library/Fonts/
+  ```
+
+### 3. **Refresh Font Cache**
+
+macOS typically auto-detects fonts once they’re placed in the correct directories, but if necessary, you can use **Font Book** to manually validate and refresh fonts:
+
+1. Open **Font Book**.
+2. In the **File** menu, select **Restore Standard Fonts**.
+
+Alternatively, you can restart your machine, or simply restart any app that uses the fonts.
+
+---
+
+## **Font Troubleshooting**
+
+If the font does not show up after installation:
+
+* **Linux**: Run the following command to ensure the font is registered in the system:
+
+  ```bash
+  fc-list | grep "FontName"
+  ```
+
+* **macOS**: If the font is not recognized, ensure the font is correctly placed in `~/Library/Fonts` (user-specific) or `/Library/Fonts` (system-wide) and restart relevant applications.
+
+---
+
+### **Additional Notes**
+
+* **Font Formats**: `.ttf` (TrueType) and `.otf` (OpenType) are the most common font formats supported by most applications.
+* **Font Cache**: After installing fonts, always remember to refresh the font cache on Linux. On macOS, font cache is typically handled automatically by the system.
+
+---
 
 
 
